@@ -42,7 +42,7 @@ class PostController extends Controller
         if (!$upload) {
             return response()->json(['message' => 'Image not uploaded.'], 500);
         }
-        $request['image'] = "storage/$upload";
+        $request['image'] = 'storage/posts/' . $request->user()->id . '/' . $file_name;
 
         $post = $request->user()->posts()->create($request->except('file'));
         if (!$post) {
