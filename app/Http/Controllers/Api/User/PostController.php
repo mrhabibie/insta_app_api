@@ -40,7 +40,7 @@ class PostController extends Controller
         $path = $file->storeAs('posts/' . $request->user()->id, now() . '.' . $ext);
         $request['image'] = $path;
 
-        $post = Post::create($request->except('file'));
+        $post = $request->user()->posts()->create($request->except('file'));
         if (!$post) {
             return response()->json(['message' => 'Upload failed.'], 500);
         }
