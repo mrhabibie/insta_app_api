@@ -6,13 +6,36 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        # code...
+        $validator = Validator::make($request->all(), [
+            'username' => ['required'],
+            'password' => ['required']
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 400);
+        }
+
+        $credentials = $request->only('username', 'password');
+        if (filter_var($credentials['username'], FILTER_VALIDATE_EMAIL)) {
+            Auth::attempt(['email' => $credentials['username'], 'password' => $credentials['password']]);
+        } else {
+            Auth::attempt(['username' => $credentials['username'], 'password' => $credentials['password']]);
+        }
+
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Username / Password tidak benar.'], 400);
+        }
+
+        $user = User::find(Auth::user()->id);
+        $user['access_token'] = $user->createToken('login')->accessToken;
+
+        return response()->json($user, 200);
     }
 
     public function register(Request $request)
