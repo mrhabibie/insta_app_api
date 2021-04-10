@@ -23,7 +23,7 @@ Route::group(['prefix' => 'auth'], function ()
 
     Route::group(['prefix' => 'user'], function ()
     {
-        Route::resource('post', PostController::class);
+        Route::resource('posts', PostController::class);
     });
 });
 
