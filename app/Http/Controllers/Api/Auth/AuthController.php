@@ -33,6 +33,21 @@ class AuthController extends Controller
         $credentials = $request->except(['password_confirmation']);
         $dob = explode('/', $credentials['dob']);
         $credentials['dob'] = Carbon::createFromDate($dob[2], $dob[1], $dob[0]);
+        if (!is_null($credentials['gender'])) {
+            switch (substr($credentials['gender'], 0, 1)) {
+                case 'L':
+                    $gender = 'M';
+                    break;
+                case 'P':
+                    $gender = 'F';
+                    break;
+
+                default:
+                    $gender = 'U';
+                    break;
+            }
+            $credentials['gender'] = $gender;
+        }
         $credentials['password'] = bcrypt($credentials['password']);
 
         $user = User::create($credentials);
