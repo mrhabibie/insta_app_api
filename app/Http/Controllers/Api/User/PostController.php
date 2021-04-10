@@ -37,7 +37,12 @@ class PostController extends Controller
 
         $file = $request->file('file');
         $ext = $file->getClientOriginalExtension();
-        $path = $file->storeAs('posts/' . $request->user()->id, date('YmdHis') . '.' . $ext);
+        $file_name = date('YmdHis') . '.' . $ext;
+        $upload = $file->storeAs('public/posts/' . $request->user()->id, $file_name);
+        if (!$upload) {
+            return response()->json(['message' => 'Image not uploaded.'], 500);
+        }
+        $path = asset('storage/posts/' . $request->user()->id . '/' . $file_name);
         $request['image'] = $path;
 
         $post = $request->user()->posts()->create($request->except('file'));
