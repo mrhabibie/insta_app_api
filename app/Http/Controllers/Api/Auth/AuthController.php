@@ -27,7 +27,7 @@ class AuthController extends Controller
             'password' => ['required', 'confirmed'],
         ]);
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()], 400);
+            return response()->json(['message' => 'Please fill all required fields.'], 400);
         }
 
         $credentials = $request->except(['password_confirmation']);
