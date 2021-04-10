@@ -40,6 +40,8 @@ class AuthController extends Controller
             return response()->json(['message' => 'Unable to register, try again later.'], 500);
         }
 
-        return response()->json(['message' => 'Register success, you can login now.'], 200);
+        $user['message'] = 'Register success, you can login now.';
+
+        return response()->json($user, 200);
     }
 }
