@@ -40,6 +40,9 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        $dob = explode('/', $request->dob);
+        $request['dob'] = Carbon::createFromDate($dob[2], $dob[1], $dob[0]);
+
         $validator = Validator::make($request->all(), [
             'name' => ['required'],
             'email' => ['required', 'email', 'unique:users'],
@@ -53,11 +56,8 @@ class AuthController extends Controller
             return response()->json(['message' => $validator->errors()->first()], 400);
         }
 
-        $credentials = $request->except(['password_confirmation']);
-        $dob = explode('/', $credentials['dob']);
-        $credentials['dob'] = Carbon::createFromDate($dob[2], $dob[1], $dob[0]);
-        if (!is_null($credentials['gender'])) {
-            switch (substr($credentials['gender'], 0, 1)) {
+        if (!is_null($request['gender'])) {
+            switch (substr($request['gender'], 0, 1)) {
                 case 'L':
                     $gender = 'M';
                     break;
@@ -69,11 +69,11 @@ class AuthController extends Controller
                     $gender = 'U';
                     break;
             }
-            $credentials['gender'] = $gender;
+            $request['gender'] = $gender;
         }
-        $credentials['password'] = bcrypt($credentials['password']);
+        $request['password'] = bcrypt($request['password']);
 
-        $user = User::create($credentials);
+        $user = User::create($request->except('password_confirmation'));
         if (!$user) {
             return response()->json(['message' => 'Unable to register, try again later.'], 500);
         }

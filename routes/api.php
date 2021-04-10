@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\User\FriendController;
 use App\Http\Controllers\Api\User\PostController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,5 +27,6 @@ Route::group(['middleware' => 'auth:api'], function ()
     Route::group(['prefix' => 'user'], function ()
     {
         Route::resource('posts', PostController::class);
+        Route::resource('friends', FriendController::class);
     });
 });

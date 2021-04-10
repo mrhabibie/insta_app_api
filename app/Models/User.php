@@ -47,4 +47,22 @@ class User extends Authenticatable
     {
         return $this->morphMany(Like::class, 'likeable');
     }
+
+    /**
+     * to_id = id kita
+     * karena mereka request pertemanan ke kita
+     */
+    public function followers()
+    {
+        return $this->hasMany(Friend::class, 'to_id', 'id');
+    }
+
+    /**
+     * from_id = id kita
+     * karena kita request pertemanan ke dia
+     */
+    public function following()
+    {
+        return $this->hasMany(Friend::class, 'from_id', 'id');
+    }
 }

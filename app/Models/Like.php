@@ -9,6 +9,8 @@ class Like extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function likeable()
     {
         return $this->morphTo();
