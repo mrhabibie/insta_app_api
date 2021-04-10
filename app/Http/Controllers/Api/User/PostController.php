@@ -37,7 +37,7 @@ class PostController extends Controller
 
         $file = $request->file('file');
         $ext = $file->getClientOriginalExtension();
-        $path = $file->storeAs('posts/' . $request->user()->id, now() . '.' . $ext);
+        $path = $file->storeAs('posts/' . $request->user()->id, date('YmdHis') . '.' . $ext);
         $request['image'] = $path;
 
         $post = $request->user()->posts()->create($request->except('file'));
