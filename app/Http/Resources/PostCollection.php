@@ -19,13 +19,16 @@ class PostCollection extends ResourceCollection
             $posts = $posts->pluck('followingPosts');
             $posts = $posts->flatten();
             $posts = $posts->sortByDesc('created_at');
-            foreach ($posts as $post) {
-                $post->image = asset($post->image);
-            }
-            $posts = $posts->values()->all();
         } else {
             $posts = $this->collection;
         }
+
+        foreach ($posts as $post) {
+            $post->image = asset($post->image);
+        }
+
+        $posts = $posts->forPage($request->page, $request->limit);
+        $posts = $posts->all();
 
         return $posts;
     }
